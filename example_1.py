@@ -1,7 +1,8 @@
 #!/usr/bin
 # -*- coding: UTF-8 -*-
-#自动登录
+# 自动登录
 import time
+import sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -18,6 +19,8 @@ try:
     loginBtn = browser.find_element_by_id("login-btn")
 except Exception, e:
     print Exception, ":", e
+    browser.quit()
+    sys.exit()
 
 emailInput.send_keys("nmzfrank@sjtu.edu.cn")
 pswInput.send_keys("123")
@@ -28,6 +31,8 @@ try:
     applicationTab = WebDriverWait(browser, 30).until(EC.visibility_of_element_located((By.CLASS_NAME, "tag-application")))
 except Exception, e:
     print Exception, ":", e
+    browser.quit()
+    sys.exit()
 
 # print repr(applicationTab.get_attribute("innerHTML"))
 html = applicationTab.get_attribute("innerHTML")
