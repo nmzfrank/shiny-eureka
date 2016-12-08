@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>demo</title>
+</head>
+<body style="height: 100%; width:100%">
+<canvas id="drawing" width="1920px" height="974px">Canvas</canvas>
+<script type="text/javascript">
+	function drawClock(content){
+		content.clearRect(1200, 0, 450, 450);
+		content.save();
+		content.strokeStyle = "#000";
+		content.beginPath();
+		content.translate(1450, 240);
+		content.moveTo(200, 0);
+		content.arc(0, 0, 200, 0, 2 * Math.PI, false);
+		content.moveTo(190, 0);
+		content.arc(0, 0, 190, 0, 2 * Math.PI, false);
+		content.stroke();
+
+		content.save();
+		content.beginPath();
+		content.strokeStyle = "#FF0000";
+		content.lineWidth = "10";
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190);
+		content.rotate(Math.PI / 6);
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190);
+		content.rotate(Math.PI / 6);
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190);
+		content.rotate(Math.PI / 6);
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190);
+		content.rotate(Math.PI / 6);
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190);
+		content.rotate(Math.PI / 6);
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190);
+		content.rotate(Math.PI / 6);
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190);
+		content.rotate(Math.PI / 6);
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190);
+		content.rotate(Math.PI / 6);
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190);
+		content.rotate(Math.PI / 6);
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190);
+		content.rotate(Math.PI / 6);
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190);
+		content.rotate(Math.PI / 6);
+		content.moveTo(0, -180);
+		content.lineTo(0 , -190); 
+		content.stroke();
+		content.restore();
+
+		var t = new Date();
+		var hour = t.getHours();
+		var minute = t.getMinutes();
+		var second = t.getSeconds();
+
+		content.save();
+		content.lineWidth = "1";
+		content.strokeStyle = ""
+		content.beginPath();
+		content.rotate(hour / 12 * Math.PI + minute / 720 * Math.PI);
+		content.moveTo(0, -70);
+		content.lineTo(0, 0);
+		content.stroke();
+		content.restore();
+
+		content.save();
+		content.lineWidth = "1";
+		content.beginPath();
+		content.rotate(minute / 30 * Math.PI + second / 1800 * Math.PI);
+		content.moveTo(0, -100);
+		content.lineTo(0, 0);
+		content.stroke();
+		content.restore();
+
+		content.save();
+		content.lineWidth = "1";
+		content.beginPath();
+		content.rotate(second / 30 * Math.PI);
+		content.moveTo(0, -150);
+		content.lineTo(0, 0);
+		content.stroke();
+		content.restore();
+
+		content.restore();
+	}
+
+	var drawing = document.getElementById("drawing");
+	if(drawing.getContext){
+		var content = drawing.getContext("2d");
+		var w = parseInt(window.innerWidth);
+		var h = parseInt(window.innerHeight);
+
+		content.strokeStyle = "#000000";
+		content.beginPath();
+		content.moveTo(w/2, 0);
+		content.lineTo(w/2, h);
+		content.moveTo(0, h/2);
+		content.lineTo(w, h/2);
+		content.moveTo(250, 10);
+		content.stroke();
+		content.strokeStyle = "#FF0000"
+		content.lineWidth = "2";
+		content.beginPath();
+		content.arc(250, 60, 50, - Math.PI / 2, 0, false);
+		content.moveTo(410, 50);
+		content.bezierCurveTo(430, 40, 480, 80, 520, 70);
+		content.moveTo(610, 80)
+		content.quadraticCurveTo(620, 80, 620, 50);
+		content.rect(710, 10, 50, 50);
+		content.stroke();
+
+		content.fillStyle = "#FF0000";
+		content.fillRect(10,10,50,50);
+
+		content.save();
+		content.fillStyle = "rgba(0, 0, 256, 0.5)";
+		content.shadowOffsetX = 5;
+		content.shadowOffsetY = 5;
+		content.shadowBlur = 4;
+		content.shadowColor = "rgba(0,0,0,0.5)";
+		content.fillRect(30, 30, 50, 50);
+		content.restore();
+
+		content.clearRect(35, 35, 20, 20);
+
+		content.strokeStyle = "#00FF00";
+		content.strokeRect(110, 10, 50, 50);
+		content.strokeRect(130, 30, 50, 50);
+
+		
+		content.lineWidth = "1";
+		content.font = "44px Verdana";
+		var gradient = content.createLinearGradient(0, 0, drawing.width / 2, 0);
+		gradient.addColorStop("0","magenta");
+		gradient.addColorStop("0.5","blue");
+		gradient.addColorStop("1.0","red");	
+		content.strokeStyle=gradient;
+		content.strokeText("www.shenqingtong.com", 100, 150);
+
+
+		setInterval(function(){
+			drawClock(content);
+		}, 500);
+		
+
+	}
+</script>
+</body>
+</html>
