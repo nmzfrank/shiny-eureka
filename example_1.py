@@ -11,6 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 browser = webdriver.Chrome()
 browser.get("https://121.43.61.190")
+
 elem = browser.find_element_by_xpath("/html/body/header/ul/li[5]/a")
 elem.send_keys(Keys.RETURN)
 try:
@@ -24,20 +25,20 @@ except Exception, e:
 
 emailInput.send_keys("nmzfrank@sjtu.edu.cn")
 pswInput.send_keys("123")
-time.sleep(2)
+time.sleep(1)
 loginBtn.click()
 
 try:
-    applicationTab = WebDriverWait(browser, 30).until(EC.visibility_of_element_located((By.CLASS_NAME, "new-form")))
+    # applicationTab = WebDriverWait(browser, 30).until(EC.visibility_of_element_located((By.CLASS_NAME, "new-form")))
+    loading = WebDriverWait(browser, 30).until(EC.invisibility_of_element_located((By.CLASS_NAME, "loading-overlay")))
 except Exception, e:
     print Exception, ":", e
     browser.quit()
     sys.exit()
 
-# print repr(applicationTab.get_attribute("innerHTML"))
+applicationTab = browser.find_element_by_class_name("new-form")
 html = applicationTab.get_attribute("innerHTML")
 print html
-time.sleep(2)
 applicationTab.click()
 
 try:
@@ -57,3 +58,5 @@ formSave = browser.find_element_by_id("saveList")
 formSave.click();
 time.sleep(5)
 browser.quit()
+
+
