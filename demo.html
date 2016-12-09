@@ -4,8 +4,155 @@
 	<title>demo</title>
 </head>
 <body style="height: 100%; width:100%">
-<canvas id="drawing" width="1920px" height="974px">Canvas</canvas>
+<canvas id="drawing" width="1920px" height="974px" tabindex="0">Canvas</canvas>
 <script type="text/javascript">
+	var drawing = document.getElementById("drawing");
+
+	var mouse = {};
+	var particles = [];
+	var snakeBody = [[0,0]];
+	var food = [20, 0];
+	var direction = 1;
+	var gameover = false;
+	for (var i = 0; i < 100; i++){
+		particles.push(new particle());
+	}
+	drawing.addEventListener('mousemove', track_mouse, false);
+	drawing.addEventListener('keydown', track_key, false);
+	drawing.focus();
+	function track_mouse(e){   
+        mouse.x = e.pageX - 400;
+        mouse.y = e.pageY - 750;
+        if(mouse.x < -150){
+        	mouse.x = -150;
+        }
+        if(mouse.x > 150){
+        	mouse.x = 150;
+        }
+        if(mouse.y < -200){
+        	mouse.y = -200;
+        }
+        if(mouse.y > 200){
+        	mouse.y = 200;
+        }
+    }
+
+    function track_key(e){
+    	var keyID = e.keyCode ? e.keyCode:e.which;  
+    	if(keyID == 65){
+    		if(direction != 1){
+    			direction = 2;
+    		}
+    	}
+    	if(keyID == 87){
+    		if(direction != 3){
+    			direction = 4;
+    		}
+    	}
+    	if(keyID == 68){
+    		if(direction != 2){
+    			direction = 1;
+    		}
+    	}
+    	if(keyID == 83){
+    		if(direction != 4){
+    			direction = 3;
+    		}
+    	}
+    }
+
+	function drawSnake(content){
+		var snakeHead = [snakeBody[0][0], snakeBody[0][1]];
+		
+		var grow = 0;
+		content.save();
+		content.translate(1400, 750);
+		content.clearRect(-150, -150, 300, 300);
+		if(gameover){
+			snakeBody = [[0,0]];
+			food = [20,0];
+			direction = 1;
+			snakeHead = [snakeBody[0][0], snakeBody[0][1]];
+			gameover = false;
+		}
+		fillStyle = "#00FF00";
+		content.fillRect(food[0], food[1], 9, 9);
+		fillStyle = "#FF0000";
+		for (var i = 0; i < snakeBody.length; i++){
+			content.fillRect(snakeBody[i][0], snakeBody[i][1], 9, 9);
+		}
+		if(snakeHead[0] == food[0] && snakeHead[1] == food[1]){
+			grow = 1;
+		}
+		if(snakeHead[0] < -140 || snakeHead[0] >= 140 || snakeHead[1] < -140 || snakeHead[1] >= 140){
+			gameover = true;
+		}
+		switch(direction){
+			case 1: snakeHead[0] += 10; break;
+			case 2: snakeHead[0] -= 10; break;
+			case 3: snakeHead[1] += 10; break;
+			case 4: snakeHead[1] -= 10; break;
+		}
+		snakeBody.unshift(snakeHead);
+		if(grow == 0){
+			snakeBody.pop();
+		}
+		else{
+			food[0] = (-14 + Math.round(Math.random()*28)) * 10;
+			food[1] = (-14 + Math.round(Math.random()*28)) * 10;
+		}
+		
+		content.restore();
+	}
+
+	function particle(){   
+        this.speed = {x: -2.5+Math.random()*5, y: -15+Math.random()*10};   
+        if(mouse.x && mouse.y){   
+            this.location = {x: mouse.x, y: mouse.y};   
+        }   
+        else  
+        {   
+            this.location = { x: 400, y: 750};   
+        }   
+	    this.radius = 10+Math.random()*20;   
+        this.life = 20+Math.random()*10;   
+        this.remaining_life = this.life;    
+        this.r = Math.round(Math.random()*255);   
+        this.g = Math.round(Math.random()*255);   
+        this.b = Math.round(Math.random()*255);   
+    }   
+
+	function drawParticles(content){
+		content.save();
+		content.translate(400, 750);
+		content.globalCompositeOperation = "source-over";
+		content.fillStyle = "#000";
+		content.fillRect(-200, -220, 400, 450);
+		content.globalCompositeOperation = "lighter";
+		for(var i = 0; i < particles.length; i++){   
+            var p = particles[i];   
+            content.beginPath();   
+            p.opacity = Math.round(p.remaining_life/p.life*100)/100   
+            var gradient = content.createRadialGradient(p.location.x, p.location.y, 0, p.location.x, p.location.y, p.radius);   
+            gradient.addColorStop(0, "rgba("+p.r+", "+p.g+", "+p.b+", "+p.opacity+")");   
+            gradient.addColorStop(0.5, "rgba("+p.r+", "+p.g+", "+p.b+", "+p.opacity+")");   
+            gradient.addColorStop(1, "rgba("+p.r+", "+p.g+", "+p.b+", 0)");   
+            content.fillStyle = gradient;   
+            content.arc(p.location.x, p.location.y, p.radius, Math.PI*2, false);   
+            if(p.location.y > -200){
+            	content.fill();
+            }
+            p.remaining_life -= 1;   
+            p.radius -= 1;   
+            p.location.x += p.speed.x;   
+            p.location.y += p.speed.y;   
+            if(p.remaining_life < 0 || p.radius < 0){   
+                particles[i] = new particle();
+            }   
+        }   
+		content.restore();
+	}
+
 	function drawClock(content){
 		content.clearRect(1200, 0, 450, 450);
 		content.save();
@@ -69,7 +216,7 @@
 		content.lineWidth = "1";
 		content.strokeStyle = ""
 		content.beginPath();
-		content.rotate(hour / 12 * Math.PI + minute / 720 * Math.PI);
+		content.rotate(hour / 6 * Math.PI + minute / 720 * Math.PI);
 		content.moveTo(0, -70);
 		content.lineTo(0, 0);
 		content.stroke();
@@ -96,7 +243,7 @@
 		content.restore();
 	}
 
-	var drawing = document.getElementById("drawing");
+	
 	if(drawing.getContext){
 		var content = drawing.getContext("2d");
 		var w = parseInt(window.innerWidth);
@@ -154,7 +301,17 @@
 			drawClock(content);
 		}, 500);
 		
+		drawParticles(content);
 
+		content.strokeRect(1249, 599, 302, 302);
+
+		setInterval(function(){
+			drawSnake(content);
+		}, 1000);
+
+		setInterval(function(){
+			drawParticles(content);
+		}, 33);   
 	}
 </script>
 </body>
