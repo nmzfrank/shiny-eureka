@@ -50,8 +50,11 @@ except Exception, e:
 
 formName.send_keys("selenium_test");
 
+fileUploader = browser.find_element_by_xpath('//*[@id="fileAddBtn11"]')
+fileUploader.click()
+
 time.sleep(2);
-formInput = browser.find_element_by_xpath('//*[@id="model-select"]/li[2]')
+formInput = browser.find_element_by_id('fileAddBtn11')
 formInput.click();
 time.sleep(1);
 formSave = browser.find_element_by_id("saveList")
